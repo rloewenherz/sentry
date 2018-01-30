@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import ConfigStore from 'app/stores/configStore';
 import MockDate from 'mockdate';
 import PropTypes from 'prop-types';
-
+import SentryTypes from 'app/proptypes';
 import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
@@ -49,6 +49,19 @@ window.TestStubs = {
     childContextTypes: {
       router: PropTypes.object,
       location: PropTypes.object,
+    },
+  }),
+
+  routerOrganizationContext: () => ({
+    context: {
+      location: TestStubs.location(),
+      router: TestStubs.router(),
+      organization: TestStubs.Organization(),
+    },
+    childContextTypes: {
+      router: PropTypes.object,
+      location: PropTypes.object,
+      organization: SentryTypes.Organization,
     },
   }),
 
