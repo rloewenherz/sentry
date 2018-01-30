@@ -16,6 +16,7 @@ class ProjectIssuesTest(AcceptanceTestCase):
             teams=[self.team],
             name='Bengal',
         )
+        self.environment = self.create_environment(name="staging")
         self.login_as(self.user)
         self.path = '/{}/{}/'.format(self.org.slug, self.project.slug)
 
@@ -44,3 +45,17 @@ class ProjectIssuesTest(AcceptanceTestCase):
         self.browser.get(self.path)
         self.browser.wait_until('.empty-stream')
         self.browser.snapshot('project issues without issues')
+
+    def test_change_environment(self):
+        with self.feature('organizations:environments'):
+            self.project.update(first_event=timezone.now())
+            self.create_group(
+                project=self.project,
+                message='Foo bar',
+            )
+            self.browser.get(self.path)
+            self.browser.wait_until('.group-list')
+            self.browser.wait_until('.barchart')
+            self.browser.click('.environment-selector-toggle')
+            self.browser.click('.project-header-toggle ul.dropdown-menu li:nth-child(2) a')
+            self.browser.wait_until('.empty-stream')
